@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { connectWallet } from "./eth";
 
 function App() {
+  const [addr, setAddr] = useState(null);
+  const [err, setErr] = useState(null);
+
+  async function handleConnect() {
+    try {
+      const { address } = await connectWallet();
+      setAddr(address);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: 24 }}>
+      <h1>SupplyChain DApp — Frontend</h1>
+      {addr ? (
+        <div>
+          Connected: <code>{addr}</code>
+        </div>
+      ) : (
+        <button onClick={handleConnect}>Connect MetaMask</button>
+      )}
+      {err && <div style={{ color: "red" }}>{err}</div>}
     </div>
   );
 }
