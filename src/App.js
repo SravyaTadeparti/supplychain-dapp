@@ -1,31 +1,58 @@
-import React, { useState } from "react";
-import { connectWallet } from "./eth";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Pages
+import Manufacturer from "./pages/Manufacturer";
+import Supplier from "./pages/Supplier";
+import Distributor from "./pages/Distributor";
+import Retailer from "./pages/Retailer";
+import Customer from "./pages/Customer";
+import Dashboard from "./pages/Dashboard";
+
+
+// Components
+import Navbar from "./components/Navbar";
 
 function App() {
-  const [addr, setAddr] = useState(null);
-  const [err, setErr] = useState(null);
-
-  async function handleConnect() {
-    try {
-      const { address } = await connectWallet();
-      setAddr(address);
-    } catch (e) {
-      setErr(e.message);
-    }
-  }
-
   return (
-    <div style={{ padding: 24 }}>
-      <h1>SupplyChain DApp — Frontend</h1>
-      {addr ? (
-        <div>
-          Connected: <code>{addr}</code>
-        </div>
-      ) : (
-        <button onClick={handleConnect}>Connect MetaMask</button>
-      )}
-      {err && <div style={{ color: "red" }}>{err}</div>}
-    </div>
+    <Router>
+      <Navbar />
+
+      <Routes>
+
+        {/* Home / Landing Page */}
+        <Route
+          path="/"
+          element={
+            <div style={{ padding: "2rem" }}>
+              <h1>Welcome to the Supply Chain DApp</h1>
+              <p>Select your role from the navigation bar.</p>
+            </div>
+          }
+        />
+
+        {/* Role Pages */}
+        <Route path="/manufacturer" element={<Manufacturer />} />
+        <Route path="/supplier" element={<Supplier />} />
+        <Route path="/distributor" element={<Distributor />} />
+        <Route path="/retailer" element={<Retailer />} />
+        <Route path="/customer" element={<Customer />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+
+        {/* 404 Fallback Route */}
+        <Route
+          path="*"
+          element={
+            <div style={{ padding: "2rem" }}>
+              <h1>404 – Page Not Found</h1>
+              <p>The page you’re looking for doesn't exist.</p>
+            </div>
+          }
+        />
+
+      </Routes>
+    </Router>
   );
 }
 
